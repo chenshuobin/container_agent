@@ -1,15 +1,15 @@
 # GitHub Actions 自动部署流水线配置文件
-# 实现多环境隔离：dev分支部署开发环境，test分支部署测试环境，main分支部署生产环境
+# 实现多环境隔离：dev分支部署开发环境，test分支部署测试环境，master分支部署生产环境
 
 name: 自动部署流水线
 
-# 触发条件：当代码推送到 dev、test、main 分支时执行
+# 触发条件：当代码推送到 dev、test、master 分支时执行
 on:
   push:
     branches:
       - dev
       - test
-      - main
+      - master
 
 # 定义环境变量
 env:
@@ -172,7 +172,7 @@ jobs:
   # 部署作业 - 生产环境
   deploy-prod:
     needs: build
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - name: 下载构建产物
