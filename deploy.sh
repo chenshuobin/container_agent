@@ -14,15 +14,12 @@ DEPLOY_DIR="/www/wwwroot"
 ENVIRONMENT=$1
 
 if [ -z "$ENVIRONMENT" ]; then
-  echo "请指定环境: dev, test, 或 prod"
+  echo "请指定环境: test, 或 prod"
   exit 1
 fi
 
 # 根据环境设置域名
 case $ENVIRONMENT in
-  "dev")
-    DOMAIN="dev.$PROJECT_NAME.com"
-    ;;
   "test")
     DOMAIN="test.$PROJECT_NAME.com"
     ;;
@@ -41,11 +38,11 @@ FULL_DEPLOY_PATH="$DEPLOY_DIR/$DOMAIN"
 # 服务器类型
 SERVER_TYPE=""
 case $ENVIRONMENT in
-  "dev" | "test")
-    SERVER_TYPE="开发/测试服务器"
+  "test")
+    SERVER_TYPE="测试环境"
     ;;
   "prod")
-    SERVER_TYPE="生产服务器"
+    SERVER_TYPE="生产环境"
     ;;
 esac
 
