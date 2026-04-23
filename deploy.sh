@@ -38,6 +38,17 @@ esac
 # 完整的部署路径
 FULL_DEPLOY_PATH="$DEPLOY_DIR/$DOMAIN"
 
+# 服务器类型
+SERVER_TYPE=""
+case $ENVIRONMENT in
+  "dev" | "test")
+    SERVER_TYPE="开发/测试服务器"
+    ;;
+  "prod")
+    SERVER_TYPE="生产服务器"
+    ;;
+esac
+
 # 检查部署目录是否存在
 if [ ! -d "$FULL_DEPLOY_PATH" ]; then
   echo "创建部署目录: $FULL_DEPLOY_PATH"

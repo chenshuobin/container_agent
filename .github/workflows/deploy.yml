@@ -68,18 +68,18 @@ jobs:
           name: build-artifact
           path: ${{ env.BUILD_DIR }}
       
-      # 2. SSH 部署到开发服务器
-      - name: SSH 部署到开发服务器
+      # 2. SSH 部署到开发/测试服务器
+      - name: SSH 部署到开发/测试服务器
         uses: appleboy/ssh-action@v1.0.0
         with:
           # 服务器 IP 地址（从 GitHub Secrets 获取）
-          host: ${{ secrets.DEV_SERVER_HOST }}
+          host: ${{ secrets.STAGE_SERVER_HOST }}
           # SSH 端口（默认 22）
-          port: ${{ secrets.DEV_SERVER_PORT || '22' }}
+          port: ${{ secrets.STAGE_SERVER_PORT || '22' }}
           # SSH 用户名（从 GitHub Secrets 获取）
-          username: ${{ secrets.DEV_SERVER_USER }}
+          username: ${{ secrets.STAGE_SERVER_USER }}
           # SSH 私钥（从 GitHub Secrets 获取）
-          key: ${{ secrets.DEV_SERVER_KEY }}
+          key: ${{ secrets.STAGE_SERVER_KEY }}
           # 执行的命令
           script: |
             # 进入部署目录
@@ -92,18 +92,18 @@ jobs:
             mkdir -p ${{ env.BUILD_DIR }}
             # 退出 SSH 会话，准备上传文件
 
-      # 3. 上传构建文件到开发服务器
+      # 3. 上传构建文件到开发/测试服务器
       - name: 上传构建文件
         uses: appleboy/scp-action@v0.1.7
         with:
           # 服务器 IP 地址
-          host: ${{ secrets.DEV_SERVER_HOST }}
+          host: ${{ secrets.STAGE_SERVER_HOST }}
           # SSH 端口
-          port: ${{ secrets.DEV_SERVER_PORT || '22' }}
+          port: ${{ secrets.STAGE_SERVER_PORT || '22' }}
           # SSH 用户名
-          username: ${{ secrets.DEV_SERVER_USER }}
+          username: ${{ secrets.STAGE_SERVER_USER }}
           # SSH 私钥
-          key: ${{ secrets.DEV_SERVER_KEY }}
+          key: ${{ secrets.STAGE_SERVER_KEY }}
           # 本地文件路径
           source: "${{ env.BUILD_DIR }}/*"
           # 远程目标路径
@@ -113,10 +113,10 @@ jobs:
       - name: 重启开发环境服务
         uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${{ secrets.DEV_SERVER_HOST }}
-          port: ${{ secrets.DEV_SERVER_PORT || '22' }}
-          username: ${{ secrets.DEV_SERVER_USER }}
-          key: ${{ secrets.DEV_SERVER_KEY }}
+          host: ${{ secrets.STAGE_SERVER_HOST }}
+          port: ${{ secrets.STAGE_SERVER_PORT || '22' }}
+          username: ${{ secrets.STAGE_SERVER_USER }}
+          key: ${{ secrets.STAGE_SERVER_KEY }}
           script: |
             # 这里可以添加重启服务的命令
             # 例如：systemctl restart nginx
@@ -134,13 +134,13 @@ jobs:
           name: build-artifact
           path: ${{ env.BUILD_DIR }}
       
-      - name: SSH 部署到测试服务器
+      - name: SSH 部署到开发/测试服务器
         uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${{ secrets.TEST_SERVER_HOST }}
-          port: ${{ secrets.TEST_SERVER_PORT || '22' }}
-          username: ${{ secrets.TEST_SERVER_USER }}
-          key: ${{ secrets.TEST_SERVER_KEY }}
+          host: ${{ secrets.STAGE_SERVER_HOST }}
+          port: ${{ secrets.STAGE_SERVER_PORT || '22' }}
+          username: ${{ secrets.STAGE_SERVER_USER }}
+          key: ${{ secrets.STAGE_SERVER_KEY }}
           script: |
             cd /www/wwwroot/test.${{ env.PROJECT_NAME }}.com
             if [ -d "${{ env.BUILD_DIR }}" ]; then
@@ -151,20 +151,20 @@ jobs:
       - name: 上传构建文件
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.TEST_SERVER_HOST }}
-          port: ${{ secrets.TEST_SERVER_PORT || '22' }}
-          username: ${{ secrets.TEST_SERVER_USER }}
-          key: ${{ secrets.TEST_SERVER_KEY }}
+          host: ${{ secrets.STAGE_SERVER_HOST }}
+          port: ${{ secrets.STAGE_SERVER_PORT || '22' }}
+          username: ${{ secrets.STAGE_SERVER_USER }}
+          key: ${{ secrets.STAGE_SERVER_KEY }}
           source: "${{ env.BUILD_DIR }}/*"
           target: "/www/wwwroot/test.${{ env.PROJECT_NAME }}.com/${{ env.BUILD_DIR }}"
       
       - name: 重启测试环境服务
         uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${{ secrets.TEST_SERVER_HOST }}
-          port: ${{ secrets.TEST_SERVER_PORT || '22' }}
-          username: ${{ secrets.TEST_SERVER_USER }}
-          key: ${{ secrets.TEST_SERVER_KEY }}
+          host: ${{ secrets.STAGE_SERVER_HOST }}
+          port: ${{ secrets.STAGE_SERVER_PORT || '22' }}
+          username: ${{ secrets.STAGE_SERVER_USER }}
+          key: ${{ secrets.STAGE_SERVER_KEY }}
           script: |
             # 重启服务命令
             echo "测试环境部署完成"

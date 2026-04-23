@@ -22,17 +22,11 @@ Container_Agent/
 
 在 GitHub 仓库的 `Settings` → `Secrets and variables` → `Actions` 中添加以下 Secrets：
 
-#### 开发环境
-- `DEV_SERVER_HOST`: 开发服务器的 IP 地址
-- `DEV_SERVER_PORT`: SSH 端口（默认 22，可选）
-- `DEV_SERVER_USER`: SSH 用户名（例如 root）
-- `DEV_SERVER_KEY`: SSH 私钥（完整的私钥内容）
-
-#### 测试环境
-- `TEST_SERVER_HOST`: 测试服务器的 IP 地址
-- `TEST_SERVER_PORT`: SSH 端口（默认 22，可选）
-- `TEST_SERVER_USER`: SSH 用户名
-- `TEST_SERVER_KEY`: SSH 私钥
+#### 开发/测试环境（共用一个服务器）
+- `STAGE_SERVER_HOST`: 开发/测试服务器的 IP 地址
+- `STAGE_SERVER_PORT`: SSH 端口（默认 22，可选）
+- `STAGE_SERVER_USER`: SSH 用户名（例如 root）
+- `STAGE_SERVER_KEY`: SSH 私钥（完整的私钥内容）
 
 #### 生产环境
 - `PROD_SERVER_HOST`: 生产服务器的 IP 地址
