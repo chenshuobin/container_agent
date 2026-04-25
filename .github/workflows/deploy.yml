@@ -16,6 +16,8 @@ env:
   PROJECT_NAME: container
   # 构建输出目录
   BUILD_DIR: dist
+  # 使用 Node.js 24
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   # 构建作业

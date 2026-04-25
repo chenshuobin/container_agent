@@ -1,0 +1,11 @@
+{
+  "name": "container-agent-deploy",
+  "version": "1.0.0",
+  "description": "Container Agent 部署配置",
+  "scripts": {
+    "build": "echo \"Build completed successfully\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT"
+}
