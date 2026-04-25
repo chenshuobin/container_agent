@@ -79,7 +79,7 @@ jobs:
           echo "Checking secrets availability..."
           echo "SERVER_HOST: ${{ secrets.SERVER_HOST }}"
           echo "SERVER_USER: ${{ secrets.SERVER_USER }}"
-          echo "SERVER_KEY length: ${# secrets.SERVER_KEY }"
+          echo "SERVER_KEY exists: ${{ secrets.SERVER_KEY != '' }}"
           echo "SERVER_PORT: ${{ secrets.SERVER_PORT || '22' }}"
 
       - name: SSH deploy to server
