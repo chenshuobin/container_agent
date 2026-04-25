@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Container Agent 部署配置",
   "scripts": {
-    "build": "mkdir -p dist && echo '<!DOCTYPE html><html><head><title>Container Agent</title></head><body><h1>Container Agent</h1><p>Deployed successfully!</p></body></html>' > dist/index.html"
+    "build": "mkdir -p dist && echo '<!DOCTYPE html><html><head><title>Hello World - Container Agent</title><style>body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; } h1 { color: #333; } p { color: #666; font-size: 18px; } .container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9; }</style></head><body><div class=\"container\"><h1>Hello World!</h1><p>Welcome to Container Agent</p><p>This is a test deployment from GitHub Actions</p><p>Current time: $(date)</p></div></body></html>' > dist/index.html"
   },
   "keywords": [],
   "author": "",
