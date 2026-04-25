@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Container Agent 部署配置",
   "scripts": {
-    "build": "echo \"Build completed successfully\""
+    "build": "mkdir -p dist && echo '<!DOCTYPE html><html><head><title>Container Agent</title></head><body><h1>Container Agent</h1><p>Deployed successfully!</p></body></html>' > dist/index.html"
   },
   "keywords": [],
   "author": "",
