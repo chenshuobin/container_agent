@@ -34,7 +34,7 @@ jobs:
       - name: 设置 Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'  # 使用 Node.js 20 版本
+          node-version: '24'  # 使用 Node.js 24 版本
           cache: 'npm'  # 缓存 npm 依赖
       
       # 3. 安装依赖
