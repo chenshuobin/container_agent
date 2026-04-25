@@ -90,8 +90,9 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_KEY }}
           debug: true
+          timeout: 60s
           script: |
-            cd /www/wwwroot/test.${{ env.PROJECT_NAME }}.com
+            cd /www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc
             if [ -d "${{ env.BUILD_DIR }}" ]; then
               mv ${{ env.BUILD_DIR }} ${{ env.BUILD_DIR }}_backup_$(date +%Y%m%d_%H%M%S)
             fi
@@ -106,7 +107,7 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           debug: true
           source: "${{ env.BUILD_DIR }}/*"
-          target: "/www/wwwroot/test.${{ env.PROJECT_NAME }}.com/${{ env.BUILD_DIR }}"
+          target: "/www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/${{ env.BUILD_DIR }}"
 
       - name: Restart test environment service
         uses: appleboy/ssh-action@v1.0.0
@@ -139,8 +140,9 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_KEY }}
           debug: true
+          timeout: 60s
           script: |
-            cd /www/wwwroot/${{ env.PROJECT_NAME }}.com
+            cd /www/wwwroot/${{ env.PROJECT_NAME }}.shadowless.cc
             if [ -d "${{ env.BUILD_DIR }}" ]; then
               mv ${{ env.BUILD_DIR }} ${{ env.BUILD_DIR }}_backup_$(date +%Y%m%d_%H%M%S)
             fi
@@ -155,7 +157,7 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           debug: true
           source: "${{ env.BUILD_DIR }}/*"
-          target: "/www/wwwroot/${{ env.PROJECT_NAME }}.com/${{ env.BUILD_DIR }}"
+          target: "/www/wwwroot/${{ env.PROJECT_NAME }}.shadowless.cc/${{ env.BUILD_DIR }}"
 
       - name: Restart production environment service
         uses: appleboy/ssh-action@v1.0.0
