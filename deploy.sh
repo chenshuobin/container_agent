@@ -21,10 +21,10 @@ fi
 # 根据环境设置域名
 case $ENVIRONMENT in
   "test")
-    DOMAIN="test.$PROJECT_NAME.com"
+    DOMAIN="test.$PROJECT_NAME.shadowless.cc"
     ;;
   "prod")
-    DOMAIN="$PROJECT_NAME.com"
+    DOMAIN="$PROJECT_NAME.shadowless.cc"
     ;;
   *)
     echo "无效的环境: $ENVIRONMENT"
