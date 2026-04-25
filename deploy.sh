@@ -4,7 +4,7 @@
 # 用于在服务器端执行部署操作
 
 # 项目名称
-PROJECT_NAME="container-agent"
+PROJECT_NAME="container"
 # 构建目录
 BUILD_DIR="dist"
 # 部署目录
