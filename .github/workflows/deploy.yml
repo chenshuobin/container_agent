@@ -1,79 +1,79 @@
-# GitHub Actions 自动部署流水线配置文件
-# 实现多环境隔离：dev分支部署开发环境，test分支部署测试环境，master分支部署生产环境
+# GitHub Actions Automatic Deployment Workflow
+# Multi-environment isolation: test branch deploys to test environment, master branch deploys to production environment
 
-name: 自动部署流水线
+name: Automatic Deployment Workflow
 
-# 触发条件：当代码推送到 test、master 分支时执行
+# Trigger conditions: Execute when code is pushed to test or master branch
 on:
   push:
     branches:
       - test
       - master
 
-# 定义环境变量
+# Define environment variables
 env:
-  # 项目名称
+  # Project name
   PROJECT_NAME: container
-  # 构建输出目录
+  # Build output directory
   BUILD_DIR: dist
-  # 使用 Node.js 24
+  # Use Node.js 24
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  # 构建作业
+  # Build job
   build:
-    # 在 Ubuntu 最新版本上运行
+    # Run on Ubuntu latest version
     runs-on: ubuntu-latest
-    # 步骤
+    # Steps
     steps:
-      # 1. 拉取代码
-      - name: 拉取代码
+      # 1. Checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
       
-      # 2. 设置 Node.js 环境
-      - name: 设置 Node.js
+      # 2. Set up Node.js environment
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'  # 使用 Node.js 24 版本
-          cache: 'npm'  # 缓存 npm 依赖
+          node-version: '24'  # Use Node.js 24 version
+          cache: 'npm'  # Cache npm dependencies
       
-      # 3. 安装依赖
-      - name: 安装依赖
+      # 3. Install dependencies
+      - name: Install dependencies
         run: npm install
       
-      # 4. 构建打包
-      - name: 构建项目
+      # 4. Build project
+      - name: Build project
         run: npm run build
       
-      # 5. 输出环境变量（调试用）
-      - name: 输出环境变量
+      # 5. Output environment variables (for debugging)
+      - name: Output environment variables
         run: |
           echo "PROJECT_NAME: $PROJECT_NAME"
           echo "BUILD_DIR: $BUILD_DIR"
-          echo "SERVER_HOST 存在: ${{ secrets.SERVER_HOST != '' }}"
-          echo "SERVER_USER 存在: ${{ secrets.SERVER_USER != '' }}"
-          echo "SERVER_KEY 存在: ${{ secrets.SERVER_KEY != '' }}"
+          echo "SERVER_HOST exists: ${{ secrets.SERVER_HOST != '' }}"
+          echo "SERVER_USER exists: ${{ secrets.SERVER_USER != '' }}"
+          echo "SERVER_KEY exists: ${{ secrets.SERVER_KEY != '' }}"
 
-      # 6. 上传构建产物作为 artifact
-      - name: 上传构建产物
+      # 6. Upload build artifact
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: build-artifact
           path: ${{ env.BUILD_DIR }}
 
-  # 部署作业 - 测试环境
+  # Deploy job - Test environment
   deploy-test:
     needs: build
     if: github.ref == 'refs/heads/test'
     runs-on: ubuntu-latest
     steps:
-      - name: 下载构建产物
+      - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
           name: build-artifact
           path: ${{ env.BUILD_DIR }}
-      
-      - name: SSH 部署到服务器
+
+      - name: SSH deploy to server
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -88,7 +88,7 @@ jobs:
             fi
             mkdir -p ${{ env.BUILD_DIR }}
 
-      - name: 上传构建文件
+      - name: Upload build files
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -98,8 +98,8 @@ jobs:
           debug: true
           source: "${{ env.BUILD_DIR }}/*"
           target: "/www/wwwroot/test.${{ env.PROJECT_NAME }}.com/${{ env.BUILD_DIR }}"
-      
-      - name: 重启测试环境服务
+
+      - name: Restart test environment service
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -107,22 +107,22 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_KEY }}
           script: |
-            # 重启服务命令
-            echo "测试环境部署完成"
+            # Restart service command
+            echo "Test environment deployment completed"
 
-  # 部署作业 - 生产环境
+  # Deploy job - Production environment
   deploy-prod:
     needs: build
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
-      - name: 下载构建产物
+      - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
           name: build-artifact
           path: ${{ env.BUILD_DIR }}
-      
-      - name: SSH 部署到服务器
+
+      - name: SSH deploy to server
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -137,7 +137,7 @@ jobs:
             fi
             mkdir -p ${{ env.BUILD_DIR }}
 
-      - name: 上传构建文件
+      - name: Upload build files
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -147,8 +147,8 @@ jobs:
           debug: true
           source: "${{ env.BUILD_DIR }}/*"
           target: "/www/wwwroot/${{ env.PROJECT_NAME }}.com/${{ env.BUILD_DIR }}"
-      
-      - name: 重启生产环境服务
+
+      - name: Restart production environment service
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -156,5 +156,5 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_KEY }}
           script: |
-            # 重启服务命令
-            echo "生产环境部署完成"
+            # Restart service command
+            echo "Production environment deployment completed"
