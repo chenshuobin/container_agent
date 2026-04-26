@@ -93,10 +93,14 @@ jobs:
           timeout: 60s
           script: |
             cd /www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc
-            if [ -d "${{ env.BUILD_DIR }}" ]; then
-              mv ${{ env.BUILD_DIR }} ${{ env.BUILD_DIR }}_backup_$(date +%Y%m%d_%H%M%S)
+            # 备份旧的文件
+            if [ -f "index.html" ]; then
+              mv index.html index.html_backup_$(date +%Y%m%d_%H%M%S)
             fi
-            mkdir -p ${{ env.BUILD_DIR }}
+            # 清理旧的dist目录（如果存在）
+            if [ -d "dist" ]; then
+              rm -rf dist
+            fi
 
       - name: Upload build files
         uses: appleboy/scp-action@v0.1.7
@@ -107,7 +111,7 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           debug: true
           source: "${{ env.BUILD_DIR }}/*"
-          target: "/www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/${{ env.BUILD_DIR }}"
+          target: "/www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/"
 
       - name: List local build files
         run: |
@@ -126,17 +130,13 @@ jobs:
           debug: true
           script: |
             echo "验证文件上传..."
-            echo "创建测试目录结构（如果不存在）..."
-            mkdir -p /www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/${{ env.BUILD_DIR }}
             echo "进入部署目录..."
             cd /www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc
             echo "当前目录: $(pwd)"
             echo "目录内容:"
             ls -la
-            echo "构建目录内容:"
-            ls -la ${{ env.BUILD_DIR }}
             echo "构建文件内容:"
-            cat ${{ env.BUILD_DIR }}/index.html || echo "index.html 文件不存在"
+            cat index.html || echo "index.html 文件不存在"
             echo "验证完成"
 
       - name: Check Nginx configuration
