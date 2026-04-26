@@ -93,14 +93,12 @@ jobs:
           timeout: 60s
           script: |
             cd /www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc
-            # 备份旧的文件
-            if [ -f "index.html" ]; then
-              mv index.html index.html_backup_$(date +%Y%m%d_%H%M%S)
-            fi
-            # 清理旧的dist目录（如果存在）
+            # 备份旧的dist目录（如果存在）
             if [ -d "dist" ]; then
-              rm -rf dist
+              mv dist dist_backup_$(date +%Y%m%d_%H%M%S)
             fi
+            # 创建新的dist目录
+            mkdir -p dist
 
       - name: Upload build files
         uses: appleboy/scp-action@v0.1.7
@@ -111,7 +109,7 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           debug: true
           source: "${{ env.BUILD_DIR }}/*"
-          target: "/www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/"
+          target: "/www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/dist/"
 
       - name: List local build files
         run: |
@@ -135,8 +133,10 @@ jobs:
             echo "当前目录: $(pwd)"
             echo "目录内容:"
             ls -la
+            echo "dist目录内容:"
+            ls -la dist
             echo "构建文件内容:"
-            cat index.html || echo "index.html 文件不存在"
+            cat dist/index.html || echo "index.html 文件不存在"
             echo "验证完成"
 
       - name: Check Nginx configuration
