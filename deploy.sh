@@ -47,23 +47,43 @@ case $ENVIRONMENT in
 esac
 
 # 检查部署目录是否存在
+echo "当前工作目录: $(pwd)"
+echo "检查部署目录: $FULL_DEPLOY_PATH"
 if [ ! -d "$FULL_DEPLOY_PATH" ]; then
-  echo "创建部署目录: $FULL_DEPLOY_PATH"
+  echo "部署目录不存在，创建部署目录: $FULL_DEPLOY_PATH"
   mkdir -p "$FULL_DEPLOY_PATH"
+  echo "部署目录创建成功"
+else
+  echo "部署目录已存在"
 fi
 
 # 进入部署目录
+echo "进入部署目录: $FULL_DEPLOY_PATH"
 cd "$FULL_DEPLOY_PATH"
+echo "当前工作目录: $(pwd)"
+
+# 列出目录内容
+echo "目录内容:"
+ls -la
 
 # 备份旧的构建文件
 if [ -d "$BUILD_DIR" ]; then
   BACKUP_NAME="$BUILD_DIR"_backup_$(date +%Y%m%d_%H%M%S)
   echo "备份旧的构建文件到: $BACKUP_NAME"
   mv "$BUILD_DIR" "$BACKUP_NAME"
+  echo "备份完成"
+else
+  echo "构建目录不存在，无需备份"
 fi
 
 # 创建新的构建目录
+echo "创建新的构建目录: $BUILD_DIR"
 mkdir -p "$BUILD_DIR"
+echo "构建目录创建成功"
+
+# 列出目录内容
+echo "目录内容:"
+ls -la
 
 echo "部署准备完成，等待构建文件上传..."
 
