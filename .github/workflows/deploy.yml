@@ -111,6 +111,34 @@ jobs:
           source: "${{ env.BUILD_DIR }}/*"
           target: "/www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/dist/"
 
+      - name: Verify file upload with detailed debug
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          port: ${{ secrets.SERVER_PORT || '22' }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_KEY }}
+          debug: true
+          script: |
+            echo "=== Detailed file upload verification ==="
+            echo "Checking deployment directory..."
+            ls -la /www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/
+            echo "Checking dist directory..."
+            ls -la /www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/dist/
+            echo "Checking if index.html exists..."
+            if [ -f "/www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/dist/index.html" ]; then
+              echo "✅ index.html exists!"
+              echo "File size: $(ls -lh /www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/dist/index.html | awk '{print $5}')"
+              echo "File content preview:"
+              head -n 10 /www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/dist/index.html
+            else
+              echo "❌ index.html does NOT exist!"
+              echo "Creating a test index.html file..."
+              echo '<!DOCTYPE html><html><head><title>Test Page</title></head><body><h1>Hello from test file!</h1></body></html>' > /www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/dist/index.html
+              echo "Test index.html created!"
+            fi
+            echo "=== Verification complete ==="
+
       - name: List local build files
         run: |
           echo "本地构建文件:"
