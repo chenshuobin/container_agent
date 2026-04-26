@@ -109,6 +109,24 @@ jobs:
           source: "${{ env.BUILD_DIR }}/*"
           target: "/www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/${{ env.BUILD_DIR }}"
 
+      - name: Verify file upload
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          port: ${{ secrets.SERVER_PORT || '22' }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_KEY }}
+          debug: true
+          script: |
+            echo "验证文件上传..."
+            cd /www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc
+            echo "当前目录: $(pwd)"
+            echo "目录内容:"
+            ls -la
+            echo "构建目录内容:"
+            ls -la ${{ env.BUILD_DIR }}
+            echo "验证完成"
+
       - name: Restart test environment service
         uses: appleboy/ssh-action@v1.0.0
         with:
