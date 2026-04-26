@@ -213,7 +213,7 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           debug: true
           source: "backend/**/*"
-          target: "/www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/backend/"
+          target: "/www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/"
 
       - name: Setup backend environment
         uses: appleboy/ssh-action@v1.0.0
@@ -369,7 +369,7 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           debug: true
           source: "backend/**/*"
-          target: "/www/wwwroot/${{ env.PROJECT_NAME }}.shadowless.cc/backend/"
+          target: "/www/wwwroot/${{ env.PROJECT_NAME }}.shadowless.cc/"
 
       - name: Setup backend environment
         uses: appleboy/ssh-action@v1.0.0
