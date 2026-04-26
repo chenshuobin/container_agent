@@ -200,6 +200,37 @@ jobs:
             cat dist/index.html || echo "index.html 文件不存在"
             echo "验证完成"
 
+      # 部署后端代码
+      - name: Upload backend files
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          port: ${{ secrets.SERVER_PORT || '22' }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_KEY }}
+          debug: true
+          source: "backend/**/*"
+          target: "/www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/backend/"
+
+      - name: Setup backend environment
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          port: ${{ secrets.SERVER_PORT || '22' }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_KEY }}
+          debug: true
+          script: |
+            echo "=== Setting up backend environment ==="
+            cd /www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/backend
+            # 安装依赖
+            echo "Installing backend dependencies..."
+            npm install
+            # 生成 Prisma 客户端
+            echo "Generating Prisma client..."
+            npx prisma generate
+            echo "=== Backend environment setup complete ==="
+
       - name: Check Nginx configuration
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -321,6 +352,37 @@ jobs:
               echo "Test index.html created!"
             fi
             echo "=== Verification complete ==="
+
+      # 部署后端代码
+      - name: Upload backend files
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          port: ${{ secrets.SERVER_PORT || '22' }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_KEY }}
+          debug: true
+          source: "backend/**/*"
+          target: "/www/wwwroot/${{ env.PROJECT_NAME }}.shadowless.cc/backend/"
+
+      - name: Setup backend environment
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          port: ${{ secrets.SERVER_PORT || '22' }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_KEY }}
+          debug: true
+          script: |
+            echo "=== Setting up backend environment ==="
+            cd /www/wwwroot/${{ env.PROJECT_NAME }}.shadowless.cc/backend
+            # 安装依赖
+            echo "Installing backend dependencies..."
+            npm install
+            # 生成 Prisma 客户端
+            echo "Generating Prisma client..."
+            npx prisma generate
+            echo "=== Backend environment setup complete ==="
 
       - name: Check Nginx configuration
         uses: appleboy/ssh-action@v1.0.0
