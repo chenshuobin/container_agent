@@ -99,6 +99,7 @@ jobs:
             fi
             # 创建新的dist目录
             mkdir -p dist
+            echo "Directory structure prepared!"
 
       - name: Upload build files
         uses: appleboy/scp-action@v0.1.7
@@ -110,6 +111,30 @@ jobs:
           debug: true
           source: "${{ env.BUILD_DIR }}/*"
           target: "/www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/dist/"
+
+      - name: Fix directory structure
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          port: ${{ secrets.SERVER_PORT || '22' }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_KEY }}
+          debug: true
+          script: |
+            echo "=== Fixing directory structure ==="
+            cd /www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc
+            # 检查是否存在dist/dist目录
+            if [ -d "dist/dist" ]; then
+              echo "Found dist/dist directory, fixing..."
+              # 移动dist/dist中的文件到dist目录
+              mv dist/dist/* dist/
+              # 删除空的dist/dist目录
+              rmdir dist/dist
+              echo "Directory structure fixed!"
+            else
+              echo "No dist/dist directory found, structure is correct."
+            fi
+            echo "=== Directory structure fixed ==="
 
       - name: Verify file upload with detailed debug
         uses: appleboy/ssh-action@v1.0.0
