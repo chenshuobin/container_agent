@@ -15,7 +15,7 @@ env:
   # Project name
   PROJECT_NAME: container
   # Build output directory
-  BUILD_DIR: dist
+  BUILD_DIR: frontend/dist
   # Use Node.js 24
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -37,13 +37,15 @@ jobs:
           node-version: '24'  # Use Node.js 24 version
           cache: 'npm'  # Cache npm dependencies
       
-      # 3. Install dependencies
-      - name: Install dependencies
+      # 3. Install dependencies (frontend)
+      - name: Install frontend dependencies
         run: npm install
+        working-directory: ./frontend
       
-      # 4. Build project
-      - name: Build project
+      # 4. Build project (frontend)
+      - name: Build frontend project
         run: npm run build
+        working-directory: ./frontend
       
       # 5. Output environment variables (for debugging)
       - name: Output environment variables
