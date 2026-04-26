@@ -134,6 +134,12 @@ jobs:
             else
               echo "No dist/dist directory found, structure is correct."
             fi
+            # 设置正确的文件权限
+            echo "Setting correct file permissions..."
+            chown -R www:www /www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/
+            chmod -R 755 /www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/
+            chmod 644 /www/wwwroot/test.${{ env.PROJECT_NAME }}.shadowless.cc/dist/index.html
+            echo "File permissions set correctly!"
             echo "=== Directory structure fixed ==="
 
       - name: Verify file upload with detailed debug
@@ -278,6 +284,12 @@ jobs:
             else
               echo "No dist/dist directory found, structure is correct."
             fi
+            # 设置正确的文件权限
+            echo "Setting correct file permissions..."
+            chown -R www:www /www/wwwroot/${{ env.PROJECT_NAME }}.shadowless.cc/
+            chmod -R 755 /www/wwwroot/${{ env.PROJECT_NAME }}.shadowless.cc/
+            chmod 644 /www/wwwroot/${{ env.PROJECT_NAME }}.shadowless.cc/dist/index.html
+            echo "File permissions set correctly!"
             echo "=== Directory structure fixed ==="
 
       - name: Verify file upload with detailed debug
